@@ -1,0 +1,60 @@
+@model GallerySharp.Models.GalleryModels.Album
+
+@{
+    ViewData["Title"] = "Album Viewer";
+}
+
+<h2>@Model.AlbumName</h2>
+
+<div>
+    <br />
+    @if (Model.UserID == ViewBag.userId)
+    {
+        @Html.ActionLink("Add New Photo", "AddPhoto", new { id = Model.AlbumID })
+    }
+    <hr />
+
+
+    @if (Model.Photos.Count != 0)
+    {
+        <dl class="dl-horizontal">
+            @foreach (var photo in Model.Photos.OrderByDescending(d => d.LikeCount).ThenByDescending(d => d.CreationDate))
+            {
+                <dt>
+                    Name: @photo.PhotoName
+                    <br />
+                    <br />
+                    Favoured: @photo.LikeCount
+                    @if (photo.UserID == ViewBag.userId)
+                    {
+                        <br />
+                        <br />
+                        @Html.ActionLink("Change Name", "ChangePhotoName", new { id = photo.PhotoID })
+                        <br />
+                        <br />
+                        <a asp-action="DeletePhoto" asp-route-id="@photo.PhotoID" class="confirmation">Delete</a>
+                    }
+                </dt>
+                <dd style="margin-bottom:10px">
+                    @{
+                        String img64 = Convert.ToBase64String(photo.Content);
+                        String img64Url = string.Format("data:image/" + photo.ContentType + ";base64,{0}", img64); //imagetype can be e.g. gif, jpeg, png etc.
+                    }
+                    <a asp-action="ViewPhoto" asp-route-id=@photo.PhotoID>
+                        <img src="@img64Url" style="max-width: 25%; height: auto;" />
+                    </a>
+                    <br />
+                </dd>
+                        }
+        </dl>
+
+                        }
+                        else
+                        {
+                            <h4>Album does not have any photos, add some new ones!</h4>
+                        }
+
+</div>
+<div>
+    <a asp-action="Index">Back to Albums</a>
+</div>

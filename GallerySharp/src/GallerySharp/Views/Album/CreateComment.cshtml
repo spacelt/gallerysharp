@@ -1,0 +1,35 @@
+@model GallerySharp.Models.GalleryViewModels.CreateCommentView
+
+@{
+    ViewData["Title"] = "Create Comment";
+}
+
+<h2>CreateComment</h2>
+
+<form asp-action="CreateComment" method="post">
+    <div class="form-horizontal">
+        <br />
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="CommentText" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <textarea asp-for="CommentText" class="form-control" rows="4" cols="50"></textarea>
+                <span asp-validation-for="CommentText" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Post" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    @Html.ActionLink("Back to photo", "ViewPhoto", new { id = ViewBag.photoId })
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

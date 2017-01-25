@@ -1,0 +1,65 @@
+@model GallerySharp.Models.GalleryModels.Photo
+
+@{
+    ViewData["Title"] = "View Photo";
+}
+
+<div class="center-block">
+    <h2>@Model.PhotoName</h2>
+    <hr />
+    @{
+        String img64 = Convert.ToBase64String(@Model.Content);
+        String img64Url = string.Format("data:image/" + @Model.ContentType + ";base64,{0}", img64);
+    }
+    <div style="position:relative;width:100%;">
+        <img src="@img64Url" style="max-width:600px;height:auto;float:left;margin-right:15px;margin-bottom:10px" />
+        <table class="table" style="width:auto;border-left:1px solid black;">
+            <thead>
+                <tr>
+                    <th>
+                        User Name
+                    </th>
+                    <th>
+                        Comment
+                    </th>
+                    <th>
+                        Creation Date
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            @if (Model.Comments.Any())
+            {
+                @foreach (var comment in Model.Comments.OrderByDescending(p => p.CreationDate))
+                {
+                    <tr>
+                        <td>@comment.UserName</td>
+                        <td>@comment.CommentText</td>
+                        <td>@comment.CreationDate</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>No Comments</td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div style="clear:both;"></div>
+    <br />
+    <h3>Favoured: @Model.LikeCount</h3>
+    <br />
+    @Html.ActionLink("Like", "LikePhoto", new { id = Model.PhotoID }) |
+    @Html.ActionLink("Dislike", "DislikePhoto", new { id = Model.PhotoID }) |
+    @Html.ActionLink("Comment", "CreateComment") |
+    @Html.ActionLink("Add To Favorites", "AddPhotoToFavorites", new { id = Model.PhotoID })
+    <hr />
+</div>
+
+<div>
+    <a asp-action="ViewAlbum">Back to Album</a>
+</div>
+
+

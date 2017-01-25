@@ -1,0 +1,56 @@
+﻿@model GallerySharp.Models.HomeViewModels.HomeViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+    byte[] userType;
+    Context.Session.TryGetValue("userType", out userType);
+}
+
+@if (userType[0] == 0)
+{
+    <h2>Welcome to GallerySharp!</h2>
+    <br />
+    <h4>Please register or sign in to browse albums and to create your own collection.</h4>
+    <br />
+}
+<h3>Cool photos</h3>
+@if (Model.PointedOutPhotos.Any())
+{
+    foreach (var photo in Model.PointedOutPhotos.Where(p => p.PointedOut).AsEnumerable())
+    {
+        String img64 = Convert.ToBase64String(photo.Content);
+        String img64Url = string.Format("data:image/" + photo.ContentType + ";base64,{0}", img64);
+        if (userType[0] == 2)
+        {
+            <a asp-action="ViewPhoto" asp-controller="Album" asp-route-id=@photo.PhotoID>
+                <img src=@img64Url style="width: auto; height: 250px; padding:10px 10px 10px 10px" />
+            </a>}
+        else
+        {
+            <img src=@img64Url style="width: auto; height: 250px; padding:10px 10px 10px 10px" />
+        }
+    }
+}
+else
+{
+    <h4> &nbsp Currently there are no beautiful photos to show. Add some cool ones and we will show them to everyone!</h4>
+}
+@if (userType[0] == 2)
+{
+    <h3>New Photos From Subscription</h3>
+    @if (Model.SubscribedPhotos.Any())
+    {
+        foreach (var photo in Model.SubscribedPhotos.Take(20))
+        {
+            String img64 = Convert.ToBase64String(photo.Content);
+            String img64Url = string.Format("data:image/" + photo.ContentType + ";base64,{0}", img64);
+                <a asp-action="ViewPhoto" asp-controller="Album" asp-route-id=@photo.PhotoID>
+                    <img src=@img64Url style="width: auto; height: 250px; padding:10px 10px 10px 10px" />
+                </a>
+        }
+    }
+    else
+    {
+        <h4> &nbsp You are not subscribed to anyone yet!</h4>
+    }
+}

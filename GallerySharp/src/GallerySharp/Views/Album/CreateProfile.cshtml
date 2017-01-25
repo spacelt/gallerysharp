@@ -1,0 +1,34 @@
+@model GallerySharp.Models.GalleryViewModels.CreateProfileView
+
+@{
+    ViewData["Title"] = "Create Profile";
+}
+
+<h2>Create your profile</h2>
+
+<form asp-action="CreateProfile">
+    <div class="form-horizontal">
+        <br />
+        <hr />
+        <div class="col-md-offset-2 col-md-10">
+            @ViewBag.errorMessage
+        </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="UserName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

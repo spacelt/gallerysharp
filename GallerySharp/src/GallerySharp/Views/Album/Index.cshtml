@@ -1,0 +1,149 @@
+@model IEnumerable<GallerySharp.Models.GalleryModels.Album>
+
+@{
+    ViewData["Title"] = "Albums";
+}
+
+<h2>Your albums</h2>
+<hr style="border:1px solid black" />
+<p>
+    <a asp-action="CreateAlbum"> &nbsp Create New Album</a>
+</p>
+
+@if (Model.Any(a => a.UserID == ViewBag.usId))
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.AlbumName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreationDate)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Where(a => a.UserID == ViewBag.usId).OrderByDescending(s => s.CreationDate))
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AlbumName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreationDate)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Change Name", "ChangeAlbumName", new { id = item.AlbumID }) |
+                        @Html.ActionLink("View", "ViewAlbum", new { id = item.AlbumID }) |
+                        <a asp-action="DeleteAlbum" asp-route-id="@item.AlbumID" class="confirmation">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h4> &nbsp You do not have any albums yet, create one!</h4>
+}
+
+
+<hr />
+<h2>Other albums</h2>
+<hr style="border:1px solid black" />
+@if (Model.Any(a => a.UserID != ViewBag.usId))
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.AlbumName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreationDate)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Where(a => a.UserID != ViewBag.usId).OrderByDescending(s => s.CreationDate))
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AlbumName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreationDate)
+                    </td>
+                    <td>
+                        @Html.ActionLink("View", "ViewAlbum", new { id = item.AlbumID })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h4> &nbsp There are no other albums of other users yet!</h4>
+}
+
+<hr />
+<h2>Subscriptions</h2>
+<hr style="border:1px solid black"/>
+@if (ViewBag.users.Count != 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    UserName
+                </th>
+                <th>
+                    Subscription
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.users)
+            {
+                <tr>
+                    <td>
+                        @item.UserName
+                    </td>
+                    <td>
+                        @{
+                            if (ViewBag.subs.Contains(item.UserID))
+                            {
+                                @Html.ActionLink("Unsubscribe", "UnsubscribeToUser", new { id = item.UserID })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("  Subscribe", "SubscribeToUser", new { id = item.UserID })
+                            }
+                        }
+                    </td>
+                </tr>
+                            }
+        </tbody>
+    </table>
+                            }
+                            else
+                            {
+                                <h4>&nbsp There are no other users yet.</h4>
+                            }
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+

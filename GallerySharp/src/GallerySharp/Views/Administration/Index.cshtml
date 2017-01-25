@@ -1,0 +1,40 @@
+@model IEnumerable<GallerySharp.Models.GalleryModels.Photo>
+
+@{
+    ViewData["Title"] = "Photos Administration";
+}
+
+
+<h3>Pointed Out Photos</h3>
+@if (Model.Any(p => p.PointedOut))
+{
+    foreach (var photo in Model.Where(p => p.PointedOut).AsEnumerable())
+    {
+        String img64 = Convert.ToBase64String(photo.Content);
+        String img64Url = string.Format("data:image/" + photo.ContentType + ";base64,{0}", img64);
+        <a asp-action="PointDownPhoto" asp-route-id=@photo.PhotoID>
+            <img src=@img64Url style="width: auto; height: 250px; margin:20px 20px 20px 20px" />
+        </a>
+    }
+}
+else
+{
+    <h4>&nbsp No pointed out photos! Select some.</h4>
+}
+
+<h3>Not Pointed Out Photos</h3>
+@if (Model.Any(p => !p.PointedOut))
+{
+    foreach (var photo in Model.Where(p => !p.PointedOut).AsEnumerable())
+    {
+        String img64 = Convert.ToBase64String(photo.Content);
+        String img64Url = string.Format("data:image/" + photo.ContentType + ";base64,{0}", img64);
+        <a asp-action="PointOutPhoto" asp-route-id=@photo.PhotoID>
+            <img src=@img64Url style="width: auto; height: 250px; margin:20px 20px 20px 20px" />
+        </a>
+    }
+}
+else
+{
+    <h4>&nbsp No not pointed out photos! Point down some.</h4>
+}

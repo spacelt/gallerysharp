@@ -1,0 +1,36 @@
+@model GallerySharp.Models.GalleryViewModels.ChangeAlbumNameView
+
+@{
+    ViewData["Title"] = "Change Album Name";
+}
+
+<h2>Set New Name For Album</h2>
+
+<form asp-action="ChangeAlbumName">
+    <div class="form-horizontal">
+        <br />
+        <h4>Old Name: @ViewBag.oldAlbumName</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="NewAlbumName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="NewAlbumName" class="form-control" />
+                <span asp-validation-for="NewAlbumName" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Set" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Cancel</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

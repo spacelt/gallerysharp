@@ -1,0 +1,28 @@
+@model IEnumerable<GallerySharp.Models.GalleryModels.Photo>
+
+@{
+    ViewData["Title"] = "Favorites";
+}
+
+<h2>Favorites</h2>
+
+@if (Model.Any())
+{
+    foreach (var photo in Model.Where(p => !p.PointedOut).AsEnumerable())
+    {
+        <div style="display:inline;">
+            @{
+                String img64 = Convert.ToBase64String(photo.Content);
+                String img64Url = string.Format("data:image/" + photo.ContentType + ";base64,{0}", img64);
+                <a asp-action="ViewPhoto" asp-controller="Album" asp-route-id=@photo.PhotoID>
+                    <img src=@img64Url style="width: auto; max-height: 150px; display:inline-block;margin:5px 5px 5px 5px" />
+                </a>
+                <a class="confirmation" asp-action="RemovePhotoFromFavorites" asp-route-id=@photo.PhotoID>Remove</a>
+            }
+        </div>
+                    }
+                }
+                else
+                {
+                    <h4>You do not have any favorite photos. Find some!</h4>
+                }
